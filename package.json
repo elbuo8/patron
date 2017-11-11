@@ -6,7 +6,8 @@
   "author": "Yamil Asusta (@elbuo8)",
   "license": "MIT",
   "scripts": {
-    "pkg-linux": "pkg -t node8-linux bin/cli.js -o dist/cli"
+    "pkg-linux": "pkg -t node8-linux bin/cli.js -o dist/cli",
+    "test": "ava"
   },
   "dependencies": {
     "gdax": "^0.4.2",
@@ -14,7 +15,8 @@
     "vorpal": "^1.12.0"
   },
   "devDependencies": {
-    "eslint": "^4.10.0",
-    "mocha": "^4.0.1"
+    "ava": "^0.23.0",
+    "ava-spec": "^1.1.0",
+    "eslint": "^4.10.0"
   }
 }
