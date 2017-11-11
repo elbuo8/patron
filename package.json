@@ -5,6 +5,9 @@
   "main": "index.js",
   "author": "Yamil Asusta (@elbuo8)",
   "license": "MIT",
+  "scripts": {
+    "pkg-linux": "pkg -t node8-linux bin/cli.js -o dist/cli"
+  },
   "dependencies": {
     "gdax": "^0.4.2",
     "log-update": "^2.3.0",
