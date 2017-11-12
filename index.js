@@ -6,7 +6,7 @@ function dispatchAction(client, action, opts, cb) {
   const quantity = opts.quantity;
   const percent = opts.percent;
 
-  const monitorOpts = { percent, action, buyIn: quantity };
+  const monitorOpts = { percent, action };
   if (action === 'sell') {
     monitorOpts.initialPrice = opts.initialPrice;
   }
@@ -15,17 +15,16 @@ function dispatchAction(client, action, opts, cb) {
       return cb(err);
     }
     console.log(action, 'position at', data.price);
-    trade(client, { quantity, action, price: data.price }, (err) => {
+    trade(client, { quantity, action, price: data.price }, (err, result) => {
       if (err) {
         return cb(err);
       }
       console.log('done', action, 'position');
-      // should come from trade fn
-      const transaction = {};
+      const transaction = { price: result.price };
       if (action === 'buy') {
-        transaction.acquired = quantity / data.price;
+        transaction.acquired = result.quantity / result.price;
       } else if (action === 'sell') {
-        transaction.sold = quantity * data.price;
+        transaction.sold = result.quantity * result.price;
       }
       return cb(null, transaction);
     });
@@ -40,7 +39,7 @@ function run(client, fund=100, buyPercent=0.03, sellPercent=0.05) {
       throw err;
     }
 
-    dispatchAction(client, 'sell', { percent: sellPercent, quantity: position.acquired }, (err, receipt) => {
+    dispatchAction(client, 'sell', { percent: sellPercent, quantity: position.acquired, initialPrice: position.price }, (err, receipt) => {
       if (err) {
         throw err;
       }
