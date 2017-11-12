@@ -46,7 +46,7 @@ function run(client, fund=100, buyPercent=0.03, sellPercent=0.05) {
 
       fund += receipt.sold;
       console.log('Fund:', fund);
-      run(client, fund, buyPercent, sellPercent);
+      return run(client, fund, buyPercent, sellPercent);
     });
   });
 }
