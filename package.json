@@ -10,7 +10,8 @@
     "test": "ava"
   },
   "dependencies": {
-    "gdax": "^0.4.2",
+    "dotenv": "^4.0.0",
+    "gdax": "https://github.com/coinbase/gdax-node",
     "log-update": "^2.3.0",
     "vorpal": "^1.12.0"
   },

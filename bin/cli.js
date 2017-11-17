@@ -1,3 +1,4 @@
+require('dotenv').config();
 const vorpal = require('vorpal')();
 
 const patron = require('../');
@@ -9,8 +10,10 @@ vorpal
   .option('-m --market <market>')
   .option('-b --buyspread <buyspread>')
   .option('-s --sellspread <sellspread>')
+  .option('-simulate --simulate <simulate>')
   .action(function(args) {
-    patron(clientFactory(args.options.market));
+    const client = clientFactory(args.options.market, args.options.simulate);
+    patron(client, args.options.fund, args.options.buyspread, args.options.sellspread);
   });
 
 vorpal.delimiter('GDAX $').show();
