@@ -10,9 +10,9 @@ vorpal
   .option('-m --market <market>')
   .option('-b --buyspread <buyspread>')
   .option('-s --sellspread <sellspread>')
-  .option('-simulate --simulate <simulate>')
   .action(function(args) {
-    const client = clientFactory(args.options.market, args.options.simulate);
+    const simulate = process.env.SIMULATE;
+    const client = clientFactory(args.options.market, simulate);
     patron(client, args.options.fund, args.options.buyspread, args.options.sellspread);
   });
 
