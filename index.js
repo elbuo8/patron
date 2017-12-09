@@ -31,8 +31,8 @@ function dispatchAction(client, action, opts, cb) {
   });
 }
 
-function run(client, fund=100, buyPercent=0.03, sellPercent=0.05) {
-  const buyQuantity = fund / 2;
+function run(client, fund=100, investPercent=0.8, buyPercent=0.03, sellPercent=0.05) {
+  const buyQuantity = fund * investPercent;
   fund -= buyQuantity;
   dispatchAction(client, 'buy', { percent: buyPercent, quantity: buyQuantity }, (err, position) => {
     if (err) {
@@ -46,7 +46,7 @@ function run(client, fund=100, buyPercent=0.03, sellPercent=0.05) {
 
       fund += receipt.sold;
       console.log('Fund:', fund);
-      return run(client, fund, buyPercent, sellPercent);
+      return run(client, fund, investPercent, buyPercent, sellPercent);
     });
   });
 }
