@@ -12,49 +12,30 @@ describe('#getInitialPrice', (it) => {
     });
   });
 
-  it.cb('should cb with error when client fails (non-http)', (t) => {
+  it.cb('should retry until returns price', (t) => {
+    let attempts = 0;
     const client = {
-      getProductTicker: (cb) => { return cb(new Error()); }
-    };
-    getInitialPrice(client, {}, (err) => {
-      t.truthy(err);
-      t.end();
-    });
-  });
-
-  it.cb('should cb with error when cliet fails (http)', (t) => {
-    const client = {
-      getProductTicker: (cb) => { return cb(null, { statusCode: 500}); }
-    };
-    getInitialPrice(client, {}, (err) => {
-      t.truthy(err);
-      t.end();
-    });
-  });
-
-  it.cb('should cb with price as a float', (t) => {
-    const client = {
-      getProductTicker: (cb) => { return cb(null, { statusCode: 200 }, { price: '100.32' }); }
+      getProductTicker: (cb) => {
+        if (attempts === 0) {
+          attempts++;
+          return cb(null, { statusCode: 500});
+        } else if (attempts == 1) {
+          attempts++;
+          return cb(new Error()) ;
+        } else  {
+          return cb(null, { statusCode: 200 }, { price: '350.0' });
+        }
+      }
     };
     getInitialPrice(client, {}, (err, price) => {
       t.ifError(err);
-      t.is(price, 100.32);
+      t.is(price, 350.0);
       t.end();
     });
   });
 });
 
 describe('#monitor', (it) => {
-  it.cb('should cb with error if #getInitialPrice fails', (t) => {
-    const client = {
-      getProductTicker: (cb) => { return cb(new Error()); }
-    };
-    monitor(client, {}, (err) => {
-      t.truthy(err);
-      t.end();
-    });
-  });
-
   it.cb('should cb with (initialPrice + percent) for action "sell"', (t) => {
     let calls = 0;
     const client = {
