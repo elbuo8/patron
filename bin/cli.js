@@ -29,7 +29,7 @@ vorpal
   .action((args) => {
     const simulate = process.env.SIMULATE;
     const client = clientFactory(args.options.market, simulate);
-    accountOverview.getOrders(client, (err, data) => {
+    accountOverview.getOrders(client, { status: 'all' }, (err, data) => {
       if (err) {
         this.log(err);
         return;
@@ -41,9 +41,10 @@ vorpal
 
 vorpal
   .command('accounts', 'lists all marketi accounts')
-  .action(() => {
+  .option('-m --market <market>')
+  .action((args) => {
     const simulate = process.env.SIMULATE;
-    const client = clientFactory(null, simulate);
+    const client = clientFactory(args.options.market, simulate);
     accountOverview.getOrders(client, (err, data) => {
       if (err) {
         this.log(err);
